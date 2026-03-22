@@ -2,7 +2,7 @@ import OpenAI from 'openai';
 
 const openai = new OpenAI({
   apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  baseURL: 'https://open.bigmodel.cn/api/paas/v4',
+  baseURL: 'https://api.moonshot.cn/v1',
   dangerouslyAllowBrowser: true
 });
 
@@ -26,7 +26,7 @@ export const analyzeUserInput = async (userInput, conversationHistory = []) => {
   ];
 
   const response = await openai.chat.completions.create({
-    model: 'glm-4',
+    model: 'moonshot-v1-8k',
     messages,
     temperature: 0.7,
     max_tokens: 500
@@ -70,10 +70,9 @@ export const extractStructuredMemory = async (conversationHistory) => {
   ];
 
   const response = await openai.chat.completions.create({
-    model: 'glm-4',
+    model: 'moonshot-v1-8k',
     messages,
-    temperature: 0.3,
-    response_format: { type: "json_object" }
+    temperature: 0.3
   });
 
   return JSON.parse(response.choices[0].message.content);
@@ -122,7 +121,7 @@ export const generateInsightFromMemories = async (memories, query) => {
   ];
 
   const response = await openai.chat.completions.create({
-    model: 'glm-4',
+    model: 'moonshot-v1-8k',
     messages,
     temperature: 0.8,
     max_tokens: 800
@@ -154,10 +153,9 @@ export const generateWeeklyInsight = async (memories) => {
   ];
 
   const response = await openai.chat.completions.create({
-    model: 'glm-4',
+    model: 'moonshot-v1-8k',
     messages,
-    temperature: 0.7,
-    response_format: { type: "json_object" }
+    temperature: 0.7
   });
 
   return JSON.parse(response.choices[0].message.content);
@@ -182,7 +180,7 @@ export const generateAutoDraft = async (recentMemories, currentContext = {}) => 
   ];
 
   const response = await openai.chat.completions.create({
-    model: 'glm-4',
+    model: 'moonshot-v1-8k',
     messages,
     temperature: 0.8,
     max_tokens: 200
