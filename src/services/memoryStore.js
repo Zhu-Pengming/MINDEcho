@@ -18,9 +18,15 @@ export const memoryStore = {
     try {
       const memories = memoryStore.getAll();
       
-      const embedding = await generateEmbedding(
-        `${memory.content} ${memory.summary} ${memory.tags.join(' ')}`
-      );
+      // 尝试生成 embedding，如果失败则跳过（Kimi API 不支持 embedding）
+      let embedding = null;
+      try {
+        embedding = await generateEmbedding(
+          `${memory.content} ${memory.summary} ${memory.tags.join(' ')}`
+        );
+      } catch (embeddingError) {
+        console.warn('Embedding generation not supported, skipping:', embeddingError.message);
+      }
 
       const newMemory = {
         id: nanoid(),

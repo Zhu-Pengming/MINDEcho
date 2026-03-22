@@ -56,8 +56,14 @@ const App = () => {
   }, [messages, activeTab]);
 
   useEffect(() => {
-    if (activeTab === 'chat' && messages.length === 1 && memories.length > 0 && !showDraft) {
-      loadAutoDraft();
+    if (activeTab === 'chat' && messages.length === 1 && !showDraft) {
+      if (memories.length > 0) {
+        loadAutoDraft();
+      } else {
+        // 没有历史记忆时显示默认提示
+        setDraftContent('今天过得怎么样？有什么想记录的吗？');
+        setShowDraft(true);
+      }
     }
   }, [activeTab, messages.length, memories.length, showDraft]);
 
