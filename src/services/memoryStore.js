@@ -17,7 +17,20 @@ export const memoryStore = {
   save: async (memory) => {
     try {
       const memories = memoryStore.getAll();
-      
+
+      // 重复检测：若最近 5 分钟内已保存内容前 60 字相同的记忆，跳过
+      const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
+      const prefix = (memory.content ?? '').slice(0, 60);
+      const isDuplicate = prefix.length > 0 && memories.some(
+        (m) =>
+          new Date(m.timestamp).getTime() > fiveMinutesAgo &&
+          (m.content ?? '').slice(0, 60) === prefix
+      );
+      if (isDuplicate) {
+        console.warn('[memoryStore] Duplicate detected within 5 min, skipping save.');
+        return null;
+      }
+
       // 尝试生成 embedding，如果失败则跳过（Kimi API 不支持 embedding）
       let embedding = null;
       try {
@@ -34,7 +47,8 @@ export const memoryStore = {
         timestamp: new Date().toISOString(),
         ...memory,
         embedding,
-        memoryType: determineMemoryType(memory)
+        memoryType: determineMemoryType(memory),
+        hidden: false
       };
 
       memories.unshift(newMemory);
@@ -104,17 +118,41 @@ export const memoryStore = {
 
   clear: () => {
     localStorage.removeItem(STORAGE_KEY);
-  }
+  },
+
+  hideMemory: (id) => {
+    return memoryStore.update(id, { hidden: true });
+  },
+
+  unhideMemory: (id) => {
+    return memoryStore.update(id, { hidden: false });
+  },
+
+  // Library 页面用：只返回未隐藏的记忆
+  getVisible: () => {
+    const memories = memoryStore.getAll();
+    return memories.filter(m => !m.hidden);
+  },
+
+  // AI 检索用：返回全部记忆（包括隐藏）
+  getAllIncludingHidden: () => {
+    return memoryStore.getAll();
+  },
 };
 
 function determineMemoryType(memory) {
   if (memory.intensity >= 7) return 'long-term';
-  
-  const importantCategories = ['工作', '人际', '健康'];
+
+  const importantCategories = ['工作', '人际', '健康', '饮食', '运动'];
   if (importantCategories.includes(memory.category)) {
     return 'long-term';
   }
-  
+
+  // 有后续跟进事项的也标记为长期记忆
+  if (memory.follow_up) {
+    return 'long-term';
+  }
+
   return 'short-term';
 }
 

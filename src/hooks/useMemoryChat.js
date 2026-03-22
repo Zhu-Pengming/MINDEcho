@@ -4,7 +4,7 @@ import { memoryStore } from '../services/memoryStore';
 
 export const useMemoryChat = () => {
   const [messages, setMessages] = useState([
-    { role: 'ai', content: '嗨，我是你的 AI 记忆伙伴。今天过得怎么样？' }
+    { role: 'ai', content: '嗨，我是你的记忆知己 MIND ECHØ 👋\n\n今天有什么想跟我聊的吗？比如：\n\n🧑‍🤝‍🧑 今天遇到了什么有意思的人？\n💼 工作或学习上有什么进展，压力大吗？\n🍽️ 今天吃了什么，感觉怎么样？\n🏃 有运动吗？做了什么，多久？\n\n不管是开心的、烦心的、还是任何生活中的小问题，都可以告诉我。我会记住这些，以后帮你做更好的决定。' }
   ]);
   const [isTyping, setIsTyping] = useState(false);
   const [conversationHistory, setConversationHistory] = useState([]);
@@ -78,7 +78,7 @@ export const useMemoryChat = () => {
 
   const resetConversation = useCallback(() => {
     setMessages([
-      { role: 'ai', content: '嗨，我是你的 AI 记忆伙伴。今天过得怎么样？' }
+      { role: 'ai', content: '嗨，我是你的记忆知己 MIND ECHØ 👋\n\n今天有什么想跟我聊的吗？比如：\n\n🧑‍🤝‍🧑 今天遇到了什么有意思的人？\n💼 工作或学习上有什么进展，压力大吗？\n🍽️ 今天吃了什么，感觉怎么样？\n🏃 有运动吗？做了什么，多久？\n\n不管是开心的、烦心的、还是任何生活中的小问题，都可以告诉我。我会记住这些，以后帮你做更好的决定。' }
     ]);
     setConversationHistory([]);
   }, []);
