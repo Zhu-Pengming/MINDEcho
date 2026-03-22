@@ -2,6 +2,7 @@ import OpenAI from 'openai';
 
 const openai = new OpenAI({
   apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+  baseURL: 'https://open.bigmodel.cn/api/paas/v4',
   dangerouslyAllowBrowser: true
 });
 
@@ -25,7 +26,7 @@ export const analyzeUserInput = async (userInput, conversationHistory = []) => {
   ];
 
   const response = await openai.chat.completions.create({
-    model: 'gpt-4-turbo-preview',
+    model: 'glm-4',
     messages,
     temperature: 0.7,
     max_tokens: 500
@@ -69,7 +70,7 @@ export const extractStructuredMemory = async (conversationHistory) => {
   ];
 
   const response = await openai.chat.completions.create({
-    model: 'gpt-4-turbo-preview',
+    model: 'glm-4',
     messages,
     temperature: 0.3,
     response_format: { type: "json_object" }
@@ -80,7 +81,7 @@ export const extractStructuredMemory = async (conversationHistory) => {
 
 export const generateEmbedding = async (text) => {
   const response = await openai.embeddings.create({
-    model: "text-embedding-3-small",
+    model: "embedding-2",
     input: text,
   });
 
@@ -121,7 +122,7 @@ export const generateInsightFromMemories = async (memories, query) => {
   ];
 
   const response = await openai.chat.completions.create({
-    model: 'gpt-4-turbo-preview',
+    model: 'glm-4',
     messages,
     temperature: 0.8,
     max_tokens: 800
@@ -153,7 +154,7 @@ export const generateWeeklyInsight = async (memories) => {
   ];
 
   const response = await openai.chat.completions.create({
-    model: 'gpt-4-turbo-preview',
+    model: 'glm-4',
     messages,
     temperature: 0.7,
     response_format: { type: "json_object" }
@@ -181,7 +182,7 @@ export const generateAutoDraft = async (recentMemories, currentContext = {}) => 
   ];
 
   const response = await openai.chat.completions.create({
-    model: 'gpt-4-turbo-preview',
+    model: 'glm-4',
     messages,
     temperature: 0.8,
     max_tokens: 200
