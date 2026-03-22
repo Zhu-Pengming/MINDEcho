@@ -160,10 +160,10 @@ const App = () => {
         </button>
       </header>
 
-      <main className="flex-1 overflow-hidden relative">
+      <main className="flex-1 overflow-hidden relative pb-28">
         {activeTab === 'chat' && (
           <div className="flex flex-col h-full max-w-2xl mx-auto w-full px-6 py-2">
-            <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-8 pr-2 scrollbar-hide pb-32">
+            <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-8 pr-2 scrollbar-hide pb-48">
               {messages.map((msg, i) => (
                 <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-4 duration-500`}>
                   <div className={`max-w-[85%] rounded-[2rem] px-6 py-4 ${
@@ -188,7 +188,7 @@ const App = () => {
               )}
             </div>
 
-            <div className="absolute bottom-8 left-0 right-0 px-6 max-w-2xl mx-auto">
+            <div className="absolute bottom-32 left-0 right-0 px-6 max-w-2xl mx-auto">
               {showDraft && messages.length === 1 && draftContent && (
                 <div className="mb-6 animate-in fade-in zoom-in-95 duration-700">
                   <div className="bg-white/60 backdrop-blur-xl border border-slate-100 rounded-[2rem] p-5 shadow-2xl shadow-slate-200/50 relative">
@@ -276,7 +276,7 @@ const App = () => {
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-32">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-40">
               {(searchQuery ? searchResults : memories).map(memory => (
                 <div key={memory.id} className="group bg-white rounded-[2.5rem] p-8 border border-slate-50 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
                   <div className="flex items-center justify-between mb-6">
@@ -318,7 +318,7 @@ const App = () => {
               <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mt-1">Deep Intelligence</p>
             </div>
 
-            <div className="space-y-8 pb-32">
+            <div className="space-y-8 pb-40">
               {stats && stats.emotionTrend.length > 0 && (
                 <div className="bg-slate-900 rounded-[3rem] p-10 text-white relative overflow-hidden">
                   <div className="relative z-10">
@@ -393,7 +393,7 @@ const App = () => {
         )}
       </main>
 
-      <footer className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-md bg-white/80 backdrop-blur-2xl border border-white/20 rounded-[3rem] p-3 shadow-2xl z-50">
+      <footer className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md bg-white/90 backdrop-blur-2xl border border-white/20 rounded-[3rem] p-3 shadow-2xl z-50">
         <div className="flex items-center justify-between">
           <button 
             onClick={() => setActiveTab('review')}
