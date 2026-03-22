@@ -2,7 +2,7 @@ import OpenAI from 'openai';
 
 const openai = new OpenAI({
   apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  baseURL: 'https://api.moonshot.cn/v1',
+  baseURL: 'http://localhost:3000/api/kimi',
   dangerouslyAllowBrowser: true
 });
 
