@@ -56,10 +56,10 @@ const App = () => {
   }, [messages, activeTab]);
 
   useEffect(() => {
-    if (activeTab === 'chat' && messages.length === 1 && memories.length > 0) {
+    if (activeTab === 'chat' && messages.length === 1 && memories.length > 0 && !showDraft) {
       loadAutoDraft();
     }
-  }, [activeTab, messages.length, memories.length]);
+  }, [activeTab, messages.length, memories.length, showDraft]);
 
   useEffect(() => {
     if (activeTab === 'stats' && !weeklyInsight && memories.length > 0) {
@@ -82,11 +82,14 @@ const App = () => {
     
     setIsLoadingDraft(true);
     try {
-      const draft = await generateAutoDraft(memories.slice(0, 3));
+      const recentMemories = memories.length > 0 ? memories.slice(0, 3) : [];
+      const draft = await generateAutoDraft(recentMemories);
       setDraftContent(draft);
       setShowDraft(true);
     } catch (error) {
       console.error('Failed to generate draft:', error);
+      setDraftContent('今天过得怎么样？有什么想记录的吗？');
+      setShowDraft(true);
     } finally {
       setIsLoadingDraft(false);
     }
@@ -189,7 +192,7 @@ const App = () => {
             </div>
 
             <div className="absolute bottom-32 left-0 right-0 px-6 max-w-2xl mx-auto">
-              {showDraft && messages.length === 1 && draftContent && (
+              {(showDraft || isLoadingDraft) && messages.length === 1 && (
                 <div className="mb-6 animate-in fade-in zoom-in-95 duration-700">
                   <div className="bg-white/60 backdrop-blur-xl border border-slate-100 rounded-[2rem] p-5 shadow-2xl shadow-slate-200/50 relative">
                     <div className="flex items-center gap-2 mb-3">
@@ -198,26 +201,35 @@ const App = () => {
                       </div>
                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">智能捕获</span>
                     </div>
-                    <p className="text-slate-600 text-[13px] mb-4 font-medium leading-relaxed">
-                      "{draftContent}"
-                    </p>
-                    <div className="flex gap-2">
-                      <button 
-                        onClick={() => { 
-                          setInputValue(draftContent); 
-                          setShowDraft(false); 
-                        }} 
-                        className="bg-slate-900 text-white text-[11px] px-5 py-2.5 rounded-xl font-bold hover:opacity-90 transition-all"
-                      >
-                        确认记录
-                      </button>
-                      <button 
-                        onClick={() => setShowDraft(false)} 
-                        className="text-slate-400 text-[11px] px-5 py-2.5 font-bold hover:text-slate-600"
-                      >
-                        忽略
-                      </button>
-                    </div>
+                    {isLoadingDraft ? (
+                      <div className="flex items-center gap-2 py-2">
+                        <Loader2 className="w-4 h-4 text-slate-400 animate-spin" />
+                        <p className="text-slate-400 text-[13px] font-medium">正在生成建议...</p>
+                      </div>
+                    ) : (
+                      <p className="text-slate-600 text-[13px] mb-4 font-medium leading-relaxed">
+                        "{draftContent}"
+                      </p>
+                    )}
+                    {!isLoadingDraft && (
+                      <div className="flex gap-2">
+                        <button 
+                          onClick={() => { 
+                            setInputValue(draftContent); 
+                            setShowDraft(false); 
+                          }} 
+                          className="bg-slate-900 text-white text-[11px] px-5 py-2.5 rounded-xl font-bold hover:opacity-90 transition-all"
+                        >
+                          输入记录
+                        </button>
+                        <button 
+                          onClick={() => setShowDraft(false)} 
+                          className="text-slate-400 text-[11px] px-5 py-2.5 font-bold hover:text-slate-600"
+                        >
+                          忽略
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
